@@ -3,71 +3,50 @@ const input = document.querySelector("#new-task-input");
 const inputSubmit = document.querySelector("#new-task-submit");
 const list_el = document.querySelector("#tasks");
 
-const task = input.value;
-
+// addEventListener
 inputSubmit.addEventListener("click", addTodoList);
+list_el.addEventListener("click", checkRemoveEdit);
 document.addEventListener("DOMContentLoaded", getLocalTodos);
+// functions
 
 function addTodoList(e) {
     e.preventDefault();
-    // console.log(e);
-    const task = input.value;
-
-    const task_el = document.createElement("div");
-    task_el.classList.add("task");
-    list_el.appendChild(task_el);
-
-    const contentDiv = document.createElement("div");
-    contentDiv.classList.add("content");
-    task_el.appendChild(contentDiv);
-
-    const inputContent = document.createElement("input");
-    inputContent.classList.add("text");
-    inputContent.type = "text";
-    inputContent.value = task;
-    inputContent.setAttribute("readonly", "readonly");
-    contentDiv.appendChild(inputContent);
-
-    const actionsDiv = document.createElement("div");
-    actionsDiv.classList.add("actions");
-    task_el.appendChild(actionsDiv);
-
-    const buttonEdit = document.createElement("button");
-    buttonEdit.classList.add("edit");
-    buttonEdit.innerText = "ويرايش";
-    actionsDiv.appendChild(buttonEdit);
-
-    const buttonDelete = document.createElement("button");
-    buttonDelete.classList.add("delete");
-    buttonDelete.innerText = "حذف";
-    actionsDiv.appendChild(buttonDelete);
-
-    const buttonDone = document.createElement("button");
-    buttonDone.classList.add("done");
-    buttonDone.innerText = "انجام";
-    actionsDiv.appendChild(buttonDone);
-
+    const creatDiv = document.createElement("div");
+    creatDiv.classList.add("task");
+    const newTodo = `
+    <li class="content">
+    <input type="text" class="text" value=${input.value} readonly />
+    </li>
+    <div class="actions"> 
+        <button class="edit">ويرايش</button>
+        <button class="delete">حذف</button>
+        <button class="done">انجام</button>
+    </div>`;
+    creatDiv.innerHTML = newTodo;
+    list_el.appendChild(creatDiv);
+    savedLocalTodos(input.value);
     input.value = "";
+}
 
-    buttonEdit.addEventListener("click", (e) => {
-        if (buttonEdit.innerHTML === "ويرايش") {
-            buttonEdit.innerHTML = "ذخيره";
-            inputContent.removeAttribute("readonly");
+function checkRemoveEdit(e) {
+    const classList = [...e.target.classList];
+    if (classList[0] === "edit") {
+        let todo = e.target.parentElement.previousElementSibling.childNodes[1];
+        if (e.target.innerText === "ويرايش") {
+            e.target.innerText = "ذخيره";
+            todo.removeAttribute("readonly");
         } else {
-            buttonEdit.innerHTML = "ويرايش";
-            inputContent.setAttribute("readonly", "readonly");
+            e.target.innerText = "ويرايش";
+            todo.setAttribute("readonly", "readonly");
         }
-    });
-
-    buttonDelete.addEventListener("click", (e) => {
-        task_el.remove();
-    });
-
-    buttonDone.addEventListener("click", (e) => {
-        const doneTask = inputContent.parentElement;
-        doneTask.classList.toggle("copmeleted");
-    });
-    savedLocalTodos(task);
+    } else if (classList[0] === "delete") {
+        const todo = e.target.parentElement.parentElement;
+        removeLocalTodos(todo);
+        todo.remove();
+    } else if (classList[0] === "done") {
+        const todo = e.target.parentElement.previousElementSibling.childNodes[1];
+        todo.classList.toggle("compeleted");
+    }
 }
 
 function savedLocalTodos(todo) {
@@ -79,68 +58,28 @@ function savedLocalTodos(todo) {
 function getLocalTodos() {
     let savedTodos = localStorage.getItem("todos") ? JSON.parse(localStorage.getItem("todos")) : [];
     savedTodos.forEach((todo) => {
-        const task_el = document.createElement("div");
-        task_el.classList.add("task");
-        list_el.appendChild(task_el);
-
-        const contentDiv = document.createElement("div");
-        contentDiv.classList.add("content");
-        task_el.appendChild(contentDiv);
-
-        const inputContent = document.createElement("input");
-        inputContent.classList.add("text");
-        inputContent.type = "text";
-        inputContent.value = todo;
-        inputContent.setAttribute("readonly", "readonly");
-        contentDiv.appendChild(inputContent);
-
-        const actionsDiv = document.createElement("div");
-        actionsDiv.classList.add("actions");
-        task_el.appendChild(actionsDiv);
-
-        const buttonEdit = document.createElement("button");
-        buttonEdit.classList.add("edit");
-        buttonEdit.innerText = "ويرايش";
-        actionsDiv.appendChild(buttonEdit);
-
-        const buttonDelete = document.createElement("button");
-        buttonDelete.classList.add("delete");
-        buttonDelete.innerText = "حذف";
-        actionsDiv.appendChild(buttonDelete);
-
-        const buttonDone = document.createElement("button");
-        buttonDone.classList.add("done");
-        buttonDone.innerText = "انجام";
-        actionsDiv.appendChild(buttonDone);
-
-        buttonEdit.addEventListener("click", (e) => {
-            if (buttonEdit.innerHTML === "ويرايش") {
-                buttonEdit.innerHTML = "ذخيره";
-                inputContent.removeAttribute("readonly");
-            } else {
-                buttonEdit.innerHTML = "ويرايش";
-                inputContent.setAttribute("readonly", "readonly");
-            }
-        });
-
-        buttonDelete.addEventListener("click", (todo) => {
-            removeLocalTodos(todo);
-            task_el.remove();
-        });
-
-        buttonDone.addEventListener("click", (e) => {
-            const doneTask = inputContent.parentElement;
-            doneTask.classList.toggle("copmeleted");
-        });
-        input.value = "";
+        const creatDiv = document.createElement("div");
+        creatDiv.classList.add("task");
+        const newTodo = `
+        <li class="content">
+        <input type="text" class="text" value=${todo} readonly />
+        </li>
+        <div class="actions"> 
+            <button class="edit">ويرايش</button>
+            <button class="delete">حذف</button>
+            <button class="done">انجام</button>
+        </div>`;
+        creatDiv.innerHTML = newTodo;
+        list_el.appendChild(creatDiv);
     });
 }
 
 function removeLocalTodos(todo) {
-    // let savedTodos = localStorage.getItem("todos") ? JSON.parse(localStorage.getItem("todos")) : [];
-    // const filterdTodo = savedTodos.filter(
-    //     (t) => t === todo.target.parentElement.parentElement.children[0].task
-    // );
-    // localStorage.setItem("todos", JSON.stringify(filterdTodo));
-    console.log(todo.target.parentElement.parentElement.children[0].children);
+    let savedTodos = localStorage.getItem("todos") ? JSON.parse(localStorage.getItem("todos")) : [];
+    const filterdTodo = savedTodos.filter(
+        (t) => t !== todo.children[0].children[0].attributes.value.value
+    );
+    localStorage.setItem("todos", JSON.stringify(filterdTodo));
+
+    console.log(filterdTodo);
 }

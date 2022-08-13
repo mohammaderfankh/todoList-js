@@ -140,46 +140,51 @@ main {
 	color: var(--pink);
 }
 
-.copmeleted {
+.compeleted {
 	text-decoration: line-through;
 	opacity: 0.5;
 	transition: all 0.5s ease-in-out;
 }
 
-.task .actions {
+/* .task .actions {
 	display: flex;
 	margin: 0 -0.5rem;
-}
+} */
 
-.task .actions button {
+.task button {
 	cursor: pointer;
-	margin: 0 0.5rem;
 	font-size: 1.125rem;
 	font-weight: 700;
 	text-transform: uppercase;
 	transition: 0.4s;
 }
 
-.task .actions button:hover {
+.task button:hover {
 	opacity: 0.8;
 }
 
-.task .actions button:active {
+.tas button:active {
 	opacity: 0.6;
 }
 
-.task .actions .edit {
+.task .edit {
 	background-image: linear-gradient(to right, var(--pink), var(--purple));
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
 
-.task .actions .delete {
+.task .delete {
 	color: crimson;
 }
 
-.task .actions .done {
+.task .done {
 	background-image: linear-gradient(to right, var(--pink), var(--purple));
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
+}
+
+@media screen and (min-width:760px) {
+	.task button {
+		margin: 0 0.5rem;
+	}
 }
