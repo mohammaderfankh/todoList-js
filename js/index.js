@@ -32,12 +32,14 @@ function checkRemoveEdit(e) {
     const classList = [...e.target.classList];
     if (classList[0] === "edit") {
         let todo = e.target.parentElement.previousElementSibling.childNodes[1];
+        let todoInput = todo.value;
         if (e.target.innerText === "ويرايش") {
             e.target.innerText = "ذخيره";
             todo.removeAttribute("readonly");
         } else {
             e.target.innerText = "ويرايش";
             todo.setAttribute("readonly", "readonly");
+            savedEditTodos(todoInput);
         }
     } else if (classList[0] === "delete") {
         const todo = e.target.parentElement.parentElement;
@@ -82,4 +84,15 @@ function removeLocalTodos(todo) {
     localStorage.setItem("todos", JSON.stringify(filterdTodo));
 
     console.log(filterdTodo);
+}
+
+function savedEditTodos(todo) {
+    let savedTodos = localStorage.getItem("todos") ? JSON.parse(localStorage.getItem("todos")) : todo
+    // savedTodos.forEach(() => {
+    //     let user = savedTodos.toString().replace(todo, todoo);
+    // toString().replace(todo.value).
+    //     console.log(user);
+    // });
+    // localStorage.setItem("todos", JSON.stringify(savedTodos));
+    console.log(todo);
 }
